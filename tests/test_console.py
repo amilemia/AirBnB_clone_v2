@@ -90,6 +90,28 @@ class TestConsole(unittest.TestCase):
             key = f'BaseModel.{output}'
             self.assertIn(key, all_objs.keys())
 
+        # Test the create command with valid parameters
+        with patch('sys.stdout', new=StringIO()) as f:
+            cmd = 'create BaseModel name="My little house" age=25'
+            console.HBNBCommand().onecmd(cmd)
+            output = f.getvalue().strip()
+            all_objs = self.storage.all()
+            key = f'BaseModel.{output}'
+            self.assertIn(key, all_objs.keys())
+            self.assertEqual(all_objs[key].name, 'My little house')
+            self.assertEqual(all_objs[key].age, 25)
+
+        # Test the create command with invalid parameters
+        with patch('sys.stdout', new=StringIO()) as f:
+            cmd = 'create BaseModel invalid_param="Invalid value"'
+            console.HBNBCommand().onecmd(cmd)
+            output = f.getvalue().strip()
+            all_objs = self.storage.all()
+            key = f'BaseModel.{output}'
+            self.assertIn(key, all_objs.keys())
+            # Invalid parameter should be skipped
+            self.assertNotIn('invalid_param', all_objs[key].__dict__)
+
     def test_show_command(self):
         """Test the show command"""
         with patch('sys.stdout', new=StringIO()) as f:

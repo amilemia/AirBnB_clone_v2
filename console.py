@@ -85,14 +85,26 @@ class HBNBCommand(cmd.Cmd):
         return False
 
     def do_create(self, arg):
-        """Create a new instance of BaseModel, save it, and print the id"""
-        args = arg.split()
-        if len(args) == 0:
+        """
+        Create a new instance of BaseModel, save it, and print the id
+        """
+        args = split(arg)
+        if not args:
             print('** class name missing **')
         elif args[0] not in self.classes:
             print('** class doesn\'t exist **')
         else:
             new_instance = self.classes[args[0]]()
+            for param in args[1:]:
+                key_value = param.split('=')
+                if len(key_value) != 2:
+                    print(f"Invalid parameter: {param}")
+                    return
+                key, value = key_value
+                # Handle the special case of string values
+                if value.startswith('"') and value.endswith('"'):
+                    value = value[1:-1].replace('_', ' ')
+                setattr(new_instance, key, value)
             new_instance.save()
             print(new_instance.id)
 
