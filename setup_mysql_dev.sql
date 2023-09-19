@@ -1,7 +1,7 @@
 -- Create the database if it doesn't exist
 CREATE DATABASE IF NOT EXISTS hbnb_dev_db;
 
--- Create or update the user hbnb_dev
+-- Create the user hbnb_dev if it doesn't exist
 CREATE USER IF NOT EXISTS 'hbnb_dev'@'localhost' IDENTIFIED BY 'hbnb_dev_pwd';
 
 -- Grant privileges to the user hbnb_dev
