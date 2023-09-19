@@ -49,7 +49,8 @@ class HBNBCommand(cmd.Cmd):
             "show": self.do_show,
             "destroy": self.do_destroy,
             "count": self.do_count,
-            "update": self.do_update
+            "update": self.do_update,
+            "create": self.do_create
         }
         match = re.search(r"\.", arg)
         if match is not None:
@@ -81,6 +82,10 @@ class HBNBCommand(cmd.Cmd):
                 elif command[0] in argdict.keys():
                     call = "{} {}".format(argl[0], command[1])
                     return argdict[command[0]](call)
+                elif arg.startswith("create"):
+                    # Handle the create command with the new syntax
+                    self.do_create(arg[7:])  # Skip "create " and pass
+                    return
         print("*** Unknown syntax: {}".format(arg))
         return False
 
