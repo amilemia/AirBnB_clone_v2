@@ -112,6 +112,30 @@ class TestConsole(unittest.TestCase):
             # Invalid parameter should be skipped
             self.assertNotIn('invalid_param', all_objs[key].__dict__)
 
+        # Test the create command with various data types
+        with patch('sys.stdout', new=StringIO()) as f:
+            cmd = 'create BaseModel name="My house" age=25 is_active=True'
+            console.HBNBCommand().onecmd(cmd)
+            output = f.getvalue().strip()
+            all_objs = self.storage.all()
+            key = f'BaseModel.{output}'
+            self.assertIn(key, all_objs.keys())
+            self.assertEqual(all_objs[key].name, 'My house')
+            self.assertEqual(all_objs[key].age, 25)
+            self.assertTrue(all_objs[key].is_active)
+
+        # Test the create command with invalid data types
+        with patch('sys.stdout', new=StringIO()) as f:
+            cmd = 'create BaseModel age="twenty-five" is_active="yes"'
+            console.HBNBCommand().onecmd(cmd)
+            output = f.getvalue().strip()
+            all_objs = self.storage.all()
+            key = f'BaseModel.{output}'
+            self.assertIn(key, all_objs.keys())
+            # Invalid data types should be skipped
+            self.assertNotIn('age', all_objs[key].__dict__)
+            self.assertNotIn('is_active', all_objs[key].__dict__)
+
     def test_show_command(self):
         """Test the show command"""
         with patch('sys.stdout', new=StringIO()) as f:
