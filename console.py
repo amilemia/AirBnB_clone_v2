@@ -39,7 +39,7 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def emptyline(self):
-        """An empty line + ENTER shouldn’t execute anything"""
+        """An empty line + ENTER shouldn't execute anything"""
         pass
 
     def default(self, arg):
@@ -108,7 +108,17 @@ class HBNBCommand(cmd.Cmd):
                 key, value = key_value
                 # Handle the special case of string values
                 if value.startswith('"') and value.endswith('"'):
-                    value = value[1:-1].replace('_', ' ')
+                    # Remove single quotes and replace with double quotes
+                    value = f'"{value[1:-1].replace("_", " ")}"'
+                else:
+                    try:
+                        # Try to convert the value to int or float
+                        if '.' in value:
+                            value = float(value)
+                        else:
+                            value = int(value)
+                    except ValueError:
+                        pass
                 setattr(new_instance, key, value)
             new_instance.save()
             print(new_instance.id)
