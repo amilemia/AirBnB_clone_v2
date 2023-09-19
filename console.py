@@ -93,7 +93,7 @@ class HBNBCommand(cmd.Cmd):
         """
         Create a new instance of BaseModel, save it, and print the id
         """
-        args = split(arg)
+        args = split(arg, posix=False)
         if not args:
             print('** class name missing **')
             return
