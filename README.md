@@ -134,3 +134,4 @@ To ensure the proper functionality of the console, run the unit tests using the 
 ## - Authors:
 
 -   [YoTi](https://github.com/YoTi1412)
+[Mohammed-Amine Madah](https://github.com/amilemia)
