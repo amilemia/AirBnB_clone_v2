@@ -3,3 +3,5 @@ dist/
 build/
 Template AirBnB0.1
 youtubeHTML
+.devcontainer
+.vscode
