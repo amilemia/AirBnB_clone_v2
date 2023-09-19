@@ -3,26 +3,24 @@
 
 from uuid import uuid4
 from datetime import datetime
-import uuid
 from models import storage
 
 
 class BaseModel:
     """Defines all common attributes/methods for other classes"""
 
-    def __init__(self, *args, **kwargs) -> None:
-        """Initialization of BaseModel Class"""
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+    def __init__(self, *args, **kwargs):
+        """Initialize a new BaseModel instance"""
         if kwargs:
             for key, value in kwargs.items():
-                if key in ["created_at", "updated_at"]:
-                    self.__dict__[key] = datetime.strptime(
-                        value, "%Y-%m-%dT%H:%M:%S.%f")
-                elif key != "__class__":
-                    self.__dict__[key] = value
-        storage.new(self)
+                if key == "created_at" or key == "updated_at":
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                if key != "__class__":
+                    setattr(self, key, value)
+        else:
+            self.id = str(uuid4())
+            self.created_at = self.updated_at = datetime.now()
+            storage.new(self)
 
     def __str__(self):
         """Return a string representation of the BaseModel instance"""
