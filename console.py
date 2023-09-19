@@ -96,32 +96,42 @@ class HBNBCommand(cmd.Cmd):
         args = split(arg)
         if not args:
             print('** class name missing **')
-        elif args[0] not in self.classes:
+            return
+
+        class_name = args[0]
+        if class_name not in self.classes:
             print('** class doesn\'t exist **')
-        else:
-            new_instance = self.classes[args[0]]()
-            for param in args[1:]:
-                key_value = param.split('=')
-                if len(key_value) != 2:
-                    print(f"Invalid parameter: {param}")
-                    return
-                key, value = key_value
-                # Handle the special case of string values
-                if value.startswith('"') and value.endswith('"'):
-                    # Remove single quotes and replace with double quotes
-                    value = f'"{value[1:-1].replace("_", " ")}"'
-                else:
-                    try:
-                        # Try to convert the value to int or float
-                        if '.' in value:
-                            value = float(value)
-                        else:
-                            value = int(value)
-                    except ValueError:
-                        pass
-                setattr(new_instance, key, value)
-            new_instance.save()
-            print(new_instance.id)
+            return
+
+        new_instance = self.classes[class_name]()
+
+        for param in args[1:]:
+            key_value = param.split('=')
+            if len(key_value) != 2:
+                print(f"Invalid parameter: {param}")
+                return
+
+            key, value = key_value
+
+            # Handle string values enclosed in quotes
+            if (value.startswith('"') and value.endswith('"')) or \
+                    (value.startswith("'") and value.endswith("'")):
+                value = value[1:-1].replace('_', ' ')
+            else:
+                # Try to convert to int, float, or other custom data types
+                try:
+                    if '.' in value:
+                        value = float(value)
+                    else:
+                        value = int(value)
+                except ValueError:
+                    # Handle other data types or raise an error
+                    pass
+
+            setattr(new_instance, key, value)
+
+        new_instance.save()
+        print(new_instance.id)
 
     def do_show(self, arg):
         """
