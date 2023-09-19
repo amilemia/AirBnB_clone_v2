@@ -109,15 +109,6 @@ class HBNBCommand(cmd.Cmd):
                 # Handle the special case of string values
                 if value.startswith('"') and value.endswith('"'):
                     value = value[1:-1].replace('_', ' ')
-                else:
-                    try:
-                        # Try to convert the value to int or float
-                        if '.' in value:
-                            value = float(value)
-                        else:
-                            value = int(value)
-                    except ValueError:
-                        pass
                 setattr(new_instance, key, value)
             new_instance.save()
             print(new_instance.id)
@@ -140,9 +131,7 @@ class HBNBCommand(cmd.Cmd):
             if key not in all_objs:
                 print('** no instance found **')
             else:
-                obj = all_objs[key]
-                for attr, value in obj.__dict__.items():
-                    print(f"{attr}: {value}")
+                print(all_objs[key])
 
     def do_destroy(self, arg):
         """Delete an instance based on the class name and id"""
