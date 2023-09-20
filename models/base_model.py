@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-"""This module defines the BaseModel class"""
+"""
+Contains class BaseModel
+"""
+
 from datetime import datetime
 import models
 from os import getenv
