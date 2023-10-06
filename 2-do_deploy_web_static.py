@@ -1,11 +1,12 @@
 #!/usr/bin/python3
 # Fabric script for deploying web_static to web servers
 
-"""Fabric script for deploying web_static to web servers"""
-from fabric.api import env, put, run
+from fabric.api import env, put, run, sudo
 from os.path import exists
 
-env.hosts = ['52.3.244.240', '52.91.146.187']
+env.hosts = ['52.3.244.240', '52.91.146.187']  # Replace with your server IP addresses
+env.user = 'ubuntu'  # Replace with your SSH username
+env.key_filename = '/home/amilemia'  # Replace with your SSH private key file path
 
 
 def do_deploy(archive_path):
@@ -23,34 +24,37 @@ def do_deploy(archive_path):
         return False
 
     try:
-        # Upload the archive to the /tmp/ directory of the web server
+        # Upload the archive to the /tmp/ directory of the web servers
         put(archive_path, "/tmp/")
-        # Get the base name, file name, dest of the archive
+
+        # Get the base name and file name without extension
         base_name = archive_path.split("/")[-1]
         file_name = base_name.split(".")[0]
-        dest_path = "/data/web_static/releases/{}/".format(file_name)
 
-        # Uncompress the archive to the folder on the web server
+        # Create the destination folder on the web servers
+        dest_path = "/data/web_static/releases/{}/".format(file_name)
         run("mkdir -p {}".format(dest_path))
+
+        # Uncompress the archive to the destination folder
         run("tar -xzf /tmp/{} -C {}".format(base_name, dest_path))
 
-        # Delete the archive from the web server
+        # Delete the archive from the web servers
         run("rm /tmp/{}".format(base_name))
 
-        # Move the files
+        # Move the files to the proper location
         run("mv {0}web_static/* {0}".format(dest_path))
 
-        # Delete the symbolic link from the web server
+        # Delete the symbolic link from the web servers
         run("rm -rf {}web_static".format(dest_path))
         run("rm -rf /data/web_static/current")
 
-        # Create a new symbolic link on the web server
+        # Create a new symbolic link on the web servers
         run("ln -s {} /data/web_static/current".format(dest_path))
 
-        # TADA
+        # Print a success message
         print("New version deployed!")
 
-    except Exception:
+    except Exception as e:
         return False
 
     return True
