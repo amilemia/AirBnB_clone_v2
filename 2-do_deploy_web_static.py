@@ -1,4 +1,6 @@
 #!/usr/bin/python3
+# Fabric script for deploying web_static to web servers
+
 """ Compress web static package
 """
 from fabric.api import *
@@ -7,7 +9,7 @@ from os import path
 
 env.hosts = ['52.3.244.240', '52.91.146.187']
 env.user = 'ubuntu'
-env.key_filename = '~/.ssh/id_rsa'
+env.key_filename = '/home/amilemia/.ssh/id_rsa'
 
 
 def do_deploy(archive_path):
