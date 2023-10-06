@@ -22,4 +22,3 @@ def do_pack():
     result = local(cmd)
     if not result.failed:
         return name
-    
